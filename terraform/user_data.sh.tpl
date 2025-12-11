@@ -2,25 +2,30 @@
 set -e
 
 echo "---- Updating system ----"
-apt-get update -y
+apt update -y
 
 echo "---- Installing Docker ----"
-apt-get install -y docker.io
-
+apt install -y docker.io
 systemctl enable docker
 systemctl start docker
 
 echo "---- Pulling Strapi image ----"
-docker pull ${dockerhub_username}/strapi-app:${image_tag}
+docker pull ${image_tag}
 
 echo "---- Stopping old Strapi container ----"
-docker rm -f strapi || true
+docker stop strapi || true
+docker rm strapi || true
 
 echo "---- Running new Strapi container ----"
 docker run -d \
   --name strapi \
   -p 1337:1337 \
-  ${dockerhub_username}/strapi-app:${image_tag}
+  -e APP_KEYS="qwertyuiopasdfghjklzxcvbnm12345" \
+  -e API_TOKEN_SALT="randomapitokensalt123" \
+  -e ADMIN_JWT_SECRET="adminjwtsecret12345" \
+  -e JWT_SECRET="jwtsecret12345" \
+  -e TRANSFER_TOKEN_SALT="transfersalt123" \
+  ${image_tag}
 
 echo "---- Deployment Completed ----"
 
