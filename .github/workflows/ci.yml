@@ -12,8 +12,6 @@ on:
       - ".github/workflows/ci.yml"
       - "public/**"
       - "database/**"
-      # 🚫 CI will NOT trigger for Terraform changes:
-      # - "terraform/**"
 
 jobs:
   build:
@@ -48,4 +46,5 @@ jobs:
             ${{ secrets.DOCKERHUB_USERNAME }}/strapi-app:${{ steps.meta.outputs.tag }}
 
       - name: Show image tag output
-        run: echo "Image Tag = ${{ steps.meta.outputs.tag }}"
+        run: echo "IMAGE_TAG=${{ steps.meta.outputs.tag }}"
+

@@ -1,19 +1,16 @@
 name: CD - Terraform Deploy to EC2
 
 on:
-  workflow_dispatch:
-    inputs:
-      image_tag:
-        description: "Docker image tag to deploy (from CI output)"
-        required: true
-        type: string
+  workflow_dispatch:   # CD starts ONLY when you click "Run workflow"
+    inputs: {}
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     env:
-      TF_VAR_image_tag: ${{ github.event.inputs.image_tag }}
+      # Auto fetch the latest image tag stored in GitHub environment
+      TF_VAR_image_tag: ${{ vars.LATEST_IMAGE_TAG }}
 
     steps:
       - name: Checkout Repository
