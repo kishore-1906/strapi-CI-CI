@@ -29,7 +29,9 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
+          file: ./Dockerfile
           push: true
+          no-cache: true   # 🔥 IMPORTANT — forces rebuild with node:20
           tags: |
             ${{ secrets.DOCKERHUB_USERNAME }}/strapi-app:latest
             ${{ secrets.DOCKERHUB_USERNAME }}/strapi-app:${{ steps.meta.outputs.tag }}
