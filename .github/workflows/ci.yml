@@ -3,6 +3,17 @@ name: CI - Build & Push Strapi Image
 on:
   push:
     branches: [ "main" ]
+    paths:
+      - "Dockerfile"
+      - "package.json"
+      - "package-lock.json"
+      - "src/**"
+      - "config/**"
+      - ".github/workflows/ci.yml"
+      - "public/**"
+      - "database/**"
+      # 🚫 CI will NOT trigger for Terraform changes:
+      # - "terraform/**"
 
 jobs:
   build:
@@ -31,11 +42,10 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          no-cache: true   # 🔥 IMPORTANT — forces rebuild with node:20
+          no-cache: true
           tags: |
             ${{ secrets.DOCKERHUB_USERNAME }}/strapi-app:latest
             ${{ secrets.DOCKERHUB_USERNAME }}/strapi-app:${{ steps.meta.outputs.tag }}
 
       - name: Show image tag output
         run: echo "Image Tag = ${{ steps.meta.outputs.tag }}"
-
