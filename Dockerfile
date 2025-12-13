@@ -1,21 +1,27 @@
-FROM node:20
+# -------- Build stage --------
+FROM node:20-alpine AS build
 
 WORKDIR /app
 
-# 1. Copy only package files
+# Required for native modules like better-sqlite3
+RUN apk add --no-cache python3 make g++
+
 COPY package.json package-lock.json ./
+RUN npm install
 
-# 2. Install esbuild BEFORE npm install
-RUN npm install esbuild --ignore-scripts
-
-# 3. Install project deps
-RUN npm install --legacy-peer-deps
-
-# 4. Copy full project
 COPY . .
 
-# 5. Build admin
 RUN npm run build
+
+
+# -------- Runtime stage --------
+FROM node:20-alpine
+
+WORKDIR /app
+
+ENV NODE_ENV=production
+
+COPY --from=build /app ./
 
 EXPOSE 1337
 
