@@ -10,7 +10,7 @@ systemctl enable docker
 systemctl start docker
 
 echo "---- Pulling Strapi image ----"
-docker pull ${image_tag}
+docker pull kishore190/strapi-app:latest
 
 echo "---- Stopping old Strapi container ----"
 docker stop strapi || true
@@ -25,7 +25,7 @@ docker run -d \
   -e ADMIN_JWT_SECRET="adminjwtsecret12345" \
   -e JWT_SECRET="jwtsecret12345" \
   -e TRANSFER_TOKEN_SALT="transfersalt123" \
-  ${image_tag}
+  kishore190/strapi-app:latest
 
 echo "---- Deployment Completed ----"
 
